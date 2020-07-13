@@ -1,5 +1,6 @@
 // Express docs: http://expressjs.com/en/api.html
 const express = require('express')
+
 // pull in Mongoose model for examples
 const Product = require('../models/product')
 

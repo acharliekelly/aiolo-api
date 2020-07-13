@@ -1,1 +1,1 @@
-mongoimport --db=nile-api-development --collection=products --type=csv --drop --headerline --file=data/products.csv
+mongoimport -h ds139295.mlab.com:39295 -d heroku_8z5k1rwk --collection=products --type=csv --drop --headerline --file=data/products.csv --username=charliekelly31415@gmail.com --password=49utaRP&d#G7hM
