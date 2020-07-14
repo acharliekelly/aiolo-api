@@ -5,7 +5,6 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 
 // require route files
-const exampleRoutes = require('./app/routes/example_routes')
 const productRoutes = require('./app/routes/product_routes')
 const cartRoutes = require('./app/routes/cart_routes')
 const purchaseRoutes = require('./app/routes/purchase_routes')
@@ -62,7 +61,6 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // register route files
-app.use(exampleRoutes)
 app.use(productRoutes)
 app.use(cartRoutes)
 app.use(userRoutes)
