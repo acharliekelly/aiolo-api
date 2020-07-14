@@ -1,5 +1,5 @@
 {
-  "name": "nile-api",
+  "name": "aiolo-api",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -11,7 +11,7 @@
     "s": "nodemon server.js",
     "debug-server": "DEBUG=express:* nodemon server.js"
   },
-  "author": "",
+  "author": "acharliekelly",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^3.0.3",
