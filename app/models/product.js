@@ -3,14 +3,16 @@ const mongoose = require('mongoose')
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    default: 'Original Artwork'
   },
   price: {
     type: Number,
     required: true
   },
-  imageUrl: {
-    type: String,
+  artwork: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Artwork',
     required: true
   }
 }, {
