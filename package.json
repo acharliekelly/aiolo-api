@@ -14,7 +14,7 @@
   "author": "acharliekelly",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^3.0.3",
+    "bcrypt": "^3.0.8",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "dotenv": "^4.0.0",
@@ -24,7 +24,8 @@
     "mongoose": "^4.12.0",
     "passport": "^0.4.0",
     "passport-http-bearer": "^1.0.1",
-    "stripe": "^6.28.0"
+    "stripe": "^6.28.0",
+    "cloudinary": "1.22.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
