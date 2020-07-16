@@ -57,7 +57,6 @@ router.get('/cart', requireToken, (req, res, next) => {
 })
 
 // CREATE
-// POST /examples
 router.post('/cart', requireToken, (req, res, next) => {
   console.log(req.body)
   console.log(req.body.purchase)
