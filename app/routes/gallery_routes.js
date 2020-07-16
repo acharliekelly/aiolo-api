@@ -1,7 +1,6 @@
 const express = require('express');
 // const passport = require('passport');
-
-const cloudinary = require('cloudinary');
+const { fetchGallery } = require('../../lib/cloudApi');
 
 const Gallery = require('../models/gallery');
 // const Artwork = require('../models/artwork');
@@ -69,19 +68,12 @@ router.get('/tag/:id', (req, res, next) => {
     .catch(next)
 });
 
-// Oh wait. Duh. This does the same thing as fetch('tag'),
-// only more expensive
 router.get('/gallery/:tag', (req, res, next) => {
   const tagName = req.params.tag;
-  cloudinary.v2.search
-    .expression(`tags=${tagName}`)
-    .with_field('context')
-    .with_field('tags')
-    .sort_by('public_id', 'asc')
-    .max_results(100)
-    .execute()
-    .then(results => {
-      return results.resources.map(resource => resource.toObject())
+  const cloudName = 'cantimaginewhy';
+  fetchGallery(cloudName, tagName)
+    .then(resources => {
+      return resources.map(resource => resource.toObject())
     })
     .then(resources => res.status(200).json({ resources }))
     .catch(next)
