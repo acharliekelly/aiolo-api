@@ -8,15 +8,14 @@ const passport = require('passport')
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
-const customErrors = require('../../lib/custom_errors')
-const requireOwnership = customErrors.requireOwnership
+// const customErrors = require('../../lib/custom_errors')
+// const requireOwnership = customErrors.requireOwnership
 const requireToken = passport.authenticate('bearer', { session: false })
 
 // instantiate a router (mini app that only handles routes)
 const router = express.Router()
 
 // INDEX
-// GET /examples
 router.get('/purchases', requireToken, (req, res, next) => {
   Purchase.find({ closed: true, owner: req.user.id })
     .populate('items')
