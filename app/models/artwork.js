@@ -27,7 +27,8 @@ const artworkSchema = new mongoose.Schema({
   },
   artist: {
     type: String,
-    required: true
+    required: true,
+    default: 'Charlie Kelly'
   },
   tags: [
     {
