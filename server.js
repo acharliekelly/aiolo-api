@@ -1,41 +1,43 @@
 // require necessary NPM packages
-const express = require('express')
-const bodyParser = require('body-parser')
-const mongoose = require('mongoose')
-const cors = require('cors')
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const cors = require('cors');
 
 // require route files
-const productRoutes = require('./app/routes/product_routes')
-const cartRoutes = require('./app/routes/cart_routes')
-const purchaseRoutes = require('./app/routes/purchase_routes')
-const userRoutes = require('./app/routes/user_routes')
-const stripeRoutes = require('./app/routes/stripe_routes')
+const homeRoute = require('../app/routes/home_route');
+const productRoutes = require('./app/routes/product_routes');
+const artworkRoutes = require('./app/routes/artwork_routes');
+const cartRoutes = require('./app/routes/cart_routes');
+const purchaseRoutes = require('./app/routes/purchase_routes');
+const userRoutes = require('./app/routes/user_routes');
+const stripeRoutes = require('./app/routes/stripe_routes');
 
 // require error handling middleware
-const errorHandler = require('./lib/error_handler')
+const errorHandler = require('./lib/error_handler');
 
 // require database configuration logic
 // `db` will be the actual Mongo URI as a string
-const db = require('./config/db')
+const db = require('./config/db');
 
 // require configured passport authentication middleware
-const auth = require('./lib/auth')
+const auth = require('./lib/auth');
 
 // establish database connection
-mongoose.Promise = global.Promise
+mongoose.Promise = global.Promise;
 mongoose.connect(db, {
   useMongoClient: true
-})
+});
 
 // instantiate express application object
-const app = express()
+const app = express();
 
 // set CORS headers on response from this API using the `cors` NPM package
 // `CLIENT_ORIGIN` is an environment variable that will be set on Heroku
-app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:7165' }))
+app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:7165' }));
 
 // define port for API to run on
-const port = process.env.PORT || 4741
+const port = process.env.PORT || 4741;
 
 // this middleware makes it so the client can use the Rails convention
 // of `Authorization: Token token=<token>` OR the Express convention of
@@ -48,34 +50,39 @@ app.use((req, res, next) => {
     req.headers.authorization = auth.replace('Token token=', 'Bearer ')
   }
   next()
-})
+});
 
 // register passport authentication middleware
-app.use(auth)
+app.use(auth);
 
 // add `bodyParser` middleware which will parse JSON requests into
 // JS objects before they reach the route files.
 // The method `.use` sets up middleware for the Express application
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 // this parses requests sent by `$.ajax`, which use a different content type
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// set static directory
+app.use(express.static('public'));
 
 // register route files
-app.use(productRoutes)
-app.use(cartRoutes)
-app.use(userRoutes)
-app.use(purchaseRoutes)
-app.use(stripeRoutes)
+app.use(homeRoute);
+app.use(productRoutes);
+app.use(artworkRoutes);
+app.use(cartRoutes);
+app.use(userRoutes);
+app.use(purchaseRoutes);
+app.use(stripeRoutes);
 
 // register error handling middleware
 // note that this comes after the route middlewares, because it needs to be
 // passed any error messages from them
-app.use(errorHandler)
+app.use(errorHandler);
 
 // run API on designated port (4741 in this case)
 app.listen(port, () => {
   console.log('listening on port ' + port)
-})
+});
 
 // needed for testing
-module.exports = app
+module.exports = app;
