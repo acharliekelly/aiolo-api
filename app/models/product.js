@@ -14,6 +14,9 @@ const productSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Artwork',
     required: true
+  },
+  productImageUri: {
+    type: String
   }
 }, {
   timestamps: true
