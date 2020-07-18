@@ -5,6 +5,10 @@ const artworkSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  cloudFolder: {
+    type: String,
+    required: true
+  },
   title: {
     type: String,
     required: true
@@ -15,20 +19,45 @@ const artworkSchema = new mongoose.Schema({
   medium: {
     type: String
   },
-  sizeWidth: {
-    type: Number
+  completed: {
+    type: Date
   },
-  sizeHeight: {
-    type: Number
+  dimensions: {
+    width: {
+      type: Number,
+      required: true
+    },
+    height: {
+      type: Number,
+      required: true
+    },
+    depth: {
+      type: Number,
+      default: 0.1
+    },
+    units: {
+      type: String,
+      default: 'inches'
+    }
   },
-  sizeUnits: {
-    type: String,
-    default: 'inches'
+  location: {
+    name: {
+      type: String
+    },
+    description: {
+      type: String
+    },
+    geolat: {
+      type: Number
+    },
+    geolng: {
+      type: Number
+    }
   },
   artist: {
-    type: String,
-    required: true,
-    default: 'Charlie Kelly'
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Artist',
+    required: true
   },
   tags: [
     {
