@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 // require route files
-const homeRoute = require('../app/routes/home_route');
+const indexRoute = require('../app/routes/index_route');
 const productRoutes = require('./app/routes/product_routes');
 const artworkRoutes = require('./app/routes/artwork_routes');
 const cartRoutes = require('./app/routes/cart_routes');
@@ -66,7 +66,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 // register route files
-app.use(homeRoute);
+app.use(indexRoute);
 app.use(productRoutes);
 app.use(artworkRoutes);
 app.use(cartRoutes);
