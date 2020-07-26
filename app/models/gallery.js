@@ -20,6 +20,8 @@ const gallerySchema = new mongoose.Schema({
     type: String,
     default: 'album'
   }
+}, {
+  timestamps: true
 });
 
 module.exports = mongoose.model('Gallery', gallerySchema);
