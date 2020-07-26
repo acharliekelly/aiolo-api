@@ -70,8 +70,7 @@ router.get('/tag/:id', (req, res, next) => {
 
 router.get('/gallery/:tag', (req, res, next) => {
   const tagName = req.params.tag;
-  const cloudName = 'cantimaginewhy';
-  fetchGallery(cloudName, tagName)
+  fetchGallery(tagName)
     .then(resources => {
       return resources.map(resource => resource.toObject())
     })
