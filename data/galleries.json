@@ -1,0 +1,488 @@
+[
+    {
+      "name": "Plein Air",
+      "tag": "plein-air-acrylic",
+      "thumbnail": "art/a_friday_in_september",
+      "description": "Painted on site",
+      "sortField": "completed",
+      "sortDesc": true,
+      "filter": "album"
+    },
+    {
+      "name": "Scenery",
+      "tag": "scenery-loc",
+      "thumbnail": "art/midwinter",
+      "description": "From a photograph I took",
+      "sortField": "completed",
+      "sortDesc": true,
+      "filter": "album"
+    },
+    {
+      "name": "Landscape",
+      "tag": "scenery-noloc",
+      "thumbnail": "nfs/the_cliffs",
+      "description": "From a photograph somebody took",
+      "sortField": "completed",
+      "sortDesc": true,
+      "filter": "album"
+    },
+    {
+      "name": "Sketch",
+      "tag": "sketch",
+      "thumbnail": "nfs/davis-t",
+      "description": "Onsite pencil sketches of local landmarks",
+      "sortField": "completed",
+      "sortDesc": true,
+      "filter": "album"
+    },
+    {
+      "name": "Name Tags",
+      "tag": "nametag",
+      "thumbnail": "nfs/charlie-7_37671079756_o_fvboho",
+      "description": "Name tags I made for various people, including me",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "album"
+    },
+    {
+      "name": "Name Plates",
+      "tag": "illumination",
+      "thumbnail": "nfs/emrys_2011",
+      "description": "Like name tags, but bigger",
+      "sortField": "order",
+      "sortDesc": false,
+      "filter": "album"
+    },
+    {
+      "name": "Knotwork",
+      "tag": "knotwork",
+      "thumbnail": "art/lotus",
+      "description": "Celtic-inspired artwork",
+      "sortField": "caption",
+      "sortDesc": false,
+      "filter": "album"
+    },
+    {
+      "name": "Cards",
+      "tag": "cards",
+      "thumbnail": "art/st-patricks-day-card-2011",
+      "description": "Designs for various holidays and special occaisions",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "album"
+    },
+    {
+      "name": "AANE",
+      "tag": "aane",
+      "thumbnail": "nfs/golden",
+      "description": "A series of the letters A-A-N-E, arranged artistically",
+      "sortField": "order",
+      "sortDesc": false,
+      "filter": "album"
+    },
+    {
+      "name": "People",
+      "tag": "portrait",
+      "thumbnail": "nfs/rihanna",
+      "description": "Sketches of people; some of them famous",
+      "sortField": "completed",
+      "sortDesc": true,
+      "filter": "album"
+    },
+    {
+      "name": "Plaitwork",
+      "tag": "plaitwork",
+      "thumbnail": "nfs/lattice_mandelbrot-set",
+      "description": "My first type of artwork; like knotwork, but with all right angles. Looks like placemats.",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "album"
+    },
+    {
+      "name": "Archive",
+      "tag": "archive",
+      "thumbnail": "nfs/ferry-beach-rock-painting_41932404964_o_lf4uhn",
+      "description": "All the other stuff I've made",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "album"
+    },
+    {
+      "name": "Places",
+      "tag": "subj-place",
+      "thumbnail": "nfs/the_cliffs",
+      "description": "Pictures of places",
+      "sortField": "completed",
+      "sortDesc": true,
+      "filter": "subject"
+    },
+    {
+      "name": "Flowers",
+      "tag": "subj-flowers",
+      "thumbnail": "nfs/back-pink_flower",
+      "description": "Pictures of flowers",
+      "sortField": "completed",
+      "sortDesc": true,
+      "filter": "subject"
+    },
+    {
+      "name": "People",
+      "tag": "subj-people",
+      "thumbnail": "nfs/luthien-7",
+      "description": "Pictures of people",
+      "sortField": "completed",
+      "sortDesc": true,
+      "filter": "subject"
+    },
+    {
+      "name": "Abstract",
+      "tag": "subj-abstract",
+      "thumbnail": "art/knotwork_square_2",
+      "description": "Abstract shapes & designs",
+      "sortField": "completed",
+      "sortDesc": true,
+      "filter": "subject"
+    },
+    {
+      "name": "Text",
+      "tag": "subj-text",
+      "thumbnail": "icon/ciw9",
+      "description": "Artistic renderings of letters",
+      "sortField": "completed",
+      "sortDesc": true,
+      "filter": "subject"
+    },
+    {
+      "name": "Animals",
+      "tag": "subj-animals",
+      "thumbnail": "nfs/amelia_2011",
+      "description": "Pictures of animals",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "subject"
+    },
+    {
+      "name": "Hobbies",
+      "tag": "subj-hobby",
+      "thumbnail": "nfs/remy-springer_2015",
+      "description": "Depictions of hobbies",
+      "sortField": "caption",
+      "sortDesc": false,
+      "filter": "subject"
+    },
+    {
+      "name": "Boston",
+      "tag": "downtown-boston",
+      "thumbnail": "art/esplanade-sunset_2018",
+      "description": "Scenes from Downtown Boston",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "location"
+    },
+    {
+      "name": "Cambridge",
+      "tag": "cambridge",
+      "thumbnail": "art/memorial_drive",
+      "description": "Scenes from Cambridge",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "location"
+    },
+    {
+      "name": "Waltham",
+      "tag": "waltham",
+      "thumbnail": "art/early_fall_mt_feake",
+      "description": "Scenes from Waltham",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "location"
+    },
+    {
+      "name": "Charles River",
+      "tag": "charles-river",
+      "thumbnail": "art/watertown_dam",
+      "description": "Scenes from along the Charles",
+      "sortField": "completed",
+      "sortDesc": true,
+      "filter": "location"
+    },
+    {
+      "name": "Maine",
+      "tag": "maine",
+      "thumbnail": "art/parker_point",
+      "description": "Scenes from Maine",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "location"
+    },
+    {
+      "name": "Elsewhere",
+      "tag": "elsewhere",
+      "thumbnail": "art/bodiam-castle_2011",
+      "description": "Scenes from farther afield",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "location"
+    },
+    {
+      "name": "Pointillist",
+      "tag": "pointillist",
+      "thumbnail": "art/fun-with-dots_2017",
+      "description": "Created by making tiny dots instead of brush strokes",
+      "sortField": "caption",
+      "sortDesc": false,
+      "filter": "style"
+    },
+    {
+      "name": "Triptych",
+      "tag": "triptych",
+      "thumbnail": "nfs/winter-yosemite",
+      "description": "Picture divided into multiple panels",
+      "sortField": "caption",
+      "sortDesc": false,
+      "filter": "style"
+    },
+    {
+      "name": "Nightscape",
+      "tag": "nightscape",
+      "thumbnail": "art/cambridge-night",
+      "description": "Scenes from after dark, painted on black background",
+      "sortField": "caption",
+      "sortDesc": false,
+      "filter": "style"
+    },
+    {
+      "name": "Miniatures",
+      "tag": "miniature",
+      "thumbnail": "art/caterpillar_hill",
+      "description": "Original is less than 6 inches on one side",
+      "sortField": "caption",
+      "sortDesc": false,
+      "filter": "style"
+    },
+    {
+      "name": "Panoramic",
+      "tag": "panorama",
+      "thumbnail": "art/winter-moon-2",
+      "description": "Long and thin",
+      "sortField": "caption",
+      "sortDesc": false,
+      "filter": "style"
+    },
+    {
+      "name": "Monogram",
+      "tag": "monogram",
+      "thumbnail": "icon/ck-gothic_monogram",
+      "description": "Artistic arrangements of letters that don't spell anything",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "style"
+    },
+    {
+      "name": "Plein Air",
+      "tag": "en plein air",
+      "thumbnail": "art/early_fall_mt_feake",
+      "description": "Created live on site",
+      "sortField": "completed",
+      "sortDesc": true,
+      "filter": "style"
+    },
+    {
+      "name": "Summer",
+      "tag": "summer",
+      "thumbnail": "art/salt-pond",
+      "description": "Summer scenes",
+      "sortField": "completed",
+      "sortDesc": true,
+      "filter": "season"
+    },
+    {
+      "name": "Fall",
+      "tag": "autumn",
+      "thumbnail": "art/autumn-at-mt-feake_2017",
+      "description": "Fall scenes",
+      "sortField": "completed",
+      "sortDesc": true,
+      "filter": "season"
+    },
+    {
+      "name": "Winter",
+      "tag": "winter",
+      "thumbnail": "art/winter-walk",
+      "description": "Winter scenes",
+      "sortField": "completed",
+      "sortDesc": true,
+      "filter": "season"
+    },
+    {
+      "name": "Spring",
+      "tag": "spring",
+      "thumbnail": "art/esplanade-sunset_2018",
+      "description": "Spring scenes",
+      "sortField": "completed",
+      "sortDesc": true,
+      "filter": "season"
+    },
+    {
+      "name": "Blue",
+      "tag": "blue",
+      "thumbnail": "art/shamrock_1",
+      "description": "Images with the color blue in them",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "color"
+    },
+    {
+      "name": "Green",
+      "tag": "green",
+      "thumbnail": "art/lotus",
+      "description": "Images with the color green in them",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "color"
+    },
+    {
+      "name": "Red",
+      "tag": "red",
+      "thumbnail": "art/winter-holidays-card-2015",
+      "description": "Images with some version of red in them",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "color"
+    },
+    {
+      "name": "Yellow",
+      "tag": "yellow",
+      "thumbnail": "art/easter-card-2012",
+      "description": "Images with some amount of yellow in them",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "color"
+    },
+    {
+      "name": "Quarantine",
+      "tag": "era-quarantine",
+      "thumbnail": "nfs/ty4",
+      "description": "March 2020 - ?",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "period"
+    },
+    {
+      "name": "Outdoors",
+      "tag": "era-current",
+      "thumbnail": "art/waltham_waterfall",
+      "description": "Summer 2019 - Spring 2020",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "period"
+    },
+    {
+      "name": "Recent",
+      "tag": "era-recent",
+      "thumbnail": "nfs/winthrop-square",
+      "description": "Recent past: 2015-19",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "period"
+    },
+    {
+      "name": "Sabbatical",
+      "tag": "sabbatical",
+      "thumbnail": "nfs/winter-yosemite",
+      "description": "Limited access to materials: 2013-15",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "period"
+    },
+    {
+      "name": "Early Work",
+      "tag": "early-work",
+      "thumbnail": "nfs/orangerie",
+      "description": "Expanding horizons: 2010-2012",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "period"
+    },
+    {
+      "name": "Learning",
+      "tag": "era-learning",
+      "thumbnail": "nfs/lattice_prism",
+      "description": "Learning to draw: 2009-10",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "period"
+    },
+    {
+      "name": "Graphite",
+      "tag": "graphite",
+      "thumbnail": "nfs/christian-science-plaza",
+      "description": "Regular old pencil",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "medium"
+    },
+    {
+      "name": "Colored Pencil",
+      "tag": "colored-pencil",
+      "thumbnail": "nfs/winter-yosemite",
+      "description": "Colored Pencil",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "medium"
+    },
+    {
+      "name": "WC Pencil",
+      "tag": "watercolor pencil",
+      "thumbnail": "art/leaving-star-island_2015",
+      "description": "First drawn with dry pigment, then painted with water to create watercolor",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "medium"
+    },
+    {
+      "name": "Watercolor",
+      "tag": "watercolor",
+      "thumbnail": "art/late-spring-on-the-charles_2017",
+      "description": "Traditional watercolor painting",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "medium"
+    },
+    {
+      "name": "Acrylic",
+      "tag": "acrylic",
+      "thumbnail": "art/riparian_balcony",
+      "description": "Layered acrylic paints",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "medium"
+    },
+    {
+      "name": "Original",
+      "tag": "for-sale",
+      "thumbnail": "art/memorial_drive",
+      "description": "Original painting is available",
+      "sortField": "price",
+      "sortDesc": false,
+      "filter": "availability"
+    },
+    {
+      "name": "Prints, etc",
+      "tag": "for-print",
+      "thumbnail": "art/esplanade-sunset_2018",
+      "description": "Buy products made from these",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "availability"
+    },
+    {
+      "name": "View",
+      "tag": "nfs",
+      "thumbnail": "nfs/lattice_eye",
+      "description": "You can look at these",
+      "sortField": "completed",
+      "sortDesc": false,
+      "filter": "availability"
+    }
+  ]
