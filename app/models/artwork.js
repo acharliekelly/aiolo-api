@@ -9,6 +9,10 @@ const artworkSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  copyProtect: {
+    type: Boolean,
+    default: true
+  },
   title: {
     type: String,
     required: true
