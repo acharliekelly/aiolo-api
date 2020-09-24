@@ -4,6 +4,7 @@
 
 import Gallery from '../models/gallery';
 import ProgressList from '../models/progressList';
+import Image from '../models/image';
 
 import { cloudinaryToImage } from './cloud';
 import { getOnsiteRef } from './utils';
@@ -30,7 +31,19 @@ const importGallery = tagName => {
   ).then(doc => {
     console.log(`Gallery ${tagName} created: ${doc._id}`);
     return doc;
-  }).catch(err => console.error('Import failed!', err));
+  }).catch(err => console.error(`Import for ${tagName} failed!`, err));
+}
+
+export const updateGalleryCovers = () => {
+  // enter coverImage ids
+  Gallery.find()
+    .then(galleries => galleries.map(gallery => {
+      const thumbId = gallery.thumbnail;
+      const img = Image.findOne({ publicId: thumbId });
+      gallery.coverImage = img._id;
+      gallery.save();
+    }))
+    .catch(err => console.error('update failed', err))
 }
 
 /**
