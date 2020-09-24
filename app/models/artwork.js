@@ -1,13 +1,17 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const artworkSchema = new mongoose.Schema({
-  cloudId: {
-    type: String,
+const artworkSchema = new Schema({
+  image: {
+    type: Schema.Types.ObjectId,
+    ref: 'Image',
     required: true
   },
-  cloudFolder: {
+  publicId: {
+    type: String
+  },
+  artworkType: {
     type: String,
-    required: true
+    default: 'picture'
   },
   copyProtect: {
     type: Boolean,
@@ -23,6 +27,10 @@ const artworkSchema = new mongoose.Schema({
   medium: {
     type: String
   },
+  surface: {
+    type: String,
+    default: 'paper'
+  },
   completed: {
     type: Date
   },
@@ -36,8 +44,7 @@ const artworkSchema = new mongoose.Schema({
       required: true
     },
     depth: {
-      type: Number,
-      default: 0.1
+      type: Number
     },
     units: {
       type: String,
@@ -45,32 +52,66 @@ const artworkSchema = new mongoose.Schema({
     }
   },
   location: {
-    name: {
+    place: {
       type: String
     },
     description: {
       type: String
     },
-    geolat: {
+    lat: {
       type: Number
     },
-    geolng: {
+    lng: {
       type: Number
     }
   },
   artist: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Artist',
     required: true
   },
-  tags: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Gallery'
-    }
-  ]
+  tags: [{ type: String }],
+  filters: {
+    subject: { type: Schema.Types.ObjectId, ref: 'Gallery' },
+    location: { type: Schema.Types.ObjectId, ref: 'Gallery' },
+    style: { type: Schema.Types.ObjectId, ref: 'Gallery' },
+    season: { type: Schema.Types.ObjectId, ref: 'Gallery' },
+    color: { type: Schema.Types.ObjectId, ref: 'Gallery' },
+    period: { type: Schema.Types.ObjectId, ref: 'Gallery' },
+    medium: { type: Schema.Types.ObjectId, ref: 'Gallery' },
+    album: { type: Schema.Types.ObjectId, ref: 'Gallery' }
+  }
 }, {
   timestamps: true
 });
 
-module.exports = mongoose.model('Artwork', artworkSchema);
+artworkSchema.virtual('material').get(function () {
+  let material = '';
+
+  if (this.medium && this.surface) {
+    material = this.medium + ' on ' + this.surface;
+  } else if (this.medium) {
+    // give medium alone, but not surface alone
+    material = this.medium;
+  }
+  return material;
+});
+
+artworkSchema.virtual('size').get(function () {
+  let size = '';
+  // const units = this.dimensions.units === 'inches' ? '"' : this.dimensions.units;
+  if (this.dimensions) {
+    const w = this.dimensions.width;
+    const h = this.dimensions.height;
+    if (this.dimensions.width && this.dimensions.height) {
+      size = `${w}" x ${h}"`;
+
+      if (this.dimensions.depth) {
+        size += ` ${this.dimensions.depth}"`;
+      }
+    }
+  }
+  return size;
+});
+
+export default model('Artwork', artworkSchema);

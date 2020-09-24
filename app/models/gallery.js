@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const gallerySchema = new mongoose.Schema({
+const gallerySchema = new Schema({
   name: {
     type: String,
     required: true
@@ -13,8 +13,21 @@ const gallerySchema = new mongoose.Schema({
     type: String
   },
   thumbnail: {
-    type: String,
-    required: true
+    type: String
+  },
+  // instead of thumbnail
+  coverImage: {
+    type: Schema.Types.ObjectId,
+    ref: 'Image'
+  },
+  // default sorting
+  sortBy: {
+    field: {
+      type: String
+    },
+    descending: {
+      type: Boolean
+    }
   },
   filter: {
     type: String,
@@ -24,4 +37,4 @@ const gallerySchema = new mongoose.Schema({
   timestamps: true
 });
 
-module.exports = mongoose.model('Gallery', gallerySchema);
+export default model('Gallery', gallerySchema);

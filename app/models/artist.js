@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const artistSchema = new mongoose.Schema({
+const artistSchema = new Schema({
   name: {
     type: String,
     required: true
@@ -26,4 +26,8 @@ const artistSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('Artist', artistSchema);
+artistSchema.virtual('url').get(function () {
+  return '/artists/' + this._id;
+});
+
+export default model('Artist', artistSchema);

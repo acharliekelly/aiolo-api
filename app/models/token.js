@@ -1,8 +1,9 @@
-'use strict'
+// TODO: move to Koios/Lelantos
+// no need for user tokens here
 
-const mongoose = require('mongoose')
+import { Schema, model } from 'mongoose'
 
-const tokenSchema = new mongoose.Schema({
+const tokenSchema = new Schema({
   tokenId: {
     type: String,
     required: true
@@ -15,6 +16,6 @@ const tokenSchema = new mongoose.Schema({
   timestamps: true
 })
 
-const Token = mongoose.model('Token', tokenSchema)
+const Token = model('Token', tokenSchema)
 
-module.exports = Token
+export default Token
