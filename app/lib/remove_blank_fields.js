@@ -1,7 +1,7 @@
 // this is a middleware for removing any key/value pairs from `req.body.foo`
 // that have an empty string as a value, e.g.
 // { example: { title: 'thing', text: '' } } -> { example: { title: 'thing' } }
-module.exports = function (req, res, next) {
+export default function (req, res, next) {
   // we don't know the name of the object in `req.body`, so we'll apply this to
   // ALL objects in `req.body`
   Object.values(req.body).forEach(obj => {

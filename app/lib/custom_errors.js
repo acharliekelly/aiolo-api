@@ -1,3 +1,5 @@
+import { ADMIN_ROLE } from './roles';
+
 // First, we'll create some custom error types by extending `Error.prototype`
 // This is simplest with ES6 class syntax. We'll set `name` and `message` in
 // the constructor method of each custom error type to match the pattern that
@@ -55,12 +57,10 @@ const requireOwnership = (requestObject, resource) => {
   }
 }
 
-const roles = require('./roles')
-
 // this method checks if the user trying to modify a resource is an administrator,
 // and throws an error if not
 const requireAdmin = requestObject => {
-  if (!requestObject.user.role >= roles.ADMIN_ROLE) {
+  if (!requestObject.user.role >= ADMIN_ROLE) {
     throw new UnauthorizedAccessError()
   }
 }
@@ -74,7 +74,7 @@ const handle404 = record => {
   }
 }
 
-module.exports = {
+export default {
   requireOwnership,
   handle404,
   requireAdmin,

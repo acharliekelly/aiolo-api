@@ -1,7 +1,7 @@
 // an error handling middleware that will run anytime one of the route
 // handlers calls `next`, in other words, when an error gets thrown in one of
 // the promise chains
-module.exports = function (err, req, res, next) {
+export default function (err, req, res, next) {
   // LOG ERRORS
 
   // don't log errors in a test environment
