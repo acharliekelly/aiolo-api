@@ -1,21 +1,22 @@
+// TODO: move to Koios
+
 // Express docs: http://expressjs.com/en/api.html
-const express = require('express')
+import { Router } from 'express'
+import { create } from '../models/token'
 require('dotenv').config()
 
+// TODO: create Stripe Key
 // configurations for stripe
 const keySecret = process.env.STRIPE_SECRET_KEY
 const stripe = require('stripe')(keySecret)
-const Token = require('../models/token')
-
-// we'll use this function to send 404 when non-existant document is requested
 
 // instantiate a router (mini app that only handles routes)
-const router = express.Router()
+const router = Router()
 
 router.post('/charge', (req, res, next) => {
   const token = Object.assign(req.body.token)
 
-  Token.create(token)
+  create(token)
     .then(token => res.status(201).json({
       token: token.toJSON()
     }))
@@ -31,4 +32,4 @@ router.post('/charge', (req, res, next) => {
     .catch(next)
 })
 
-module.exports = router
+export default router

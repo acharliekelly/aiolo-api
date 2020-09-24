@@ -1,33 +1,33 @@
 // require necessary NPM packages
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const cors = require('cors');
+import express from 'express';
+import { json, urlencoded } from 'body-parser';
+import mongoose from 'mongoose';
+import cors from 'cors';
 
-// require route files
-const indexRoute = require('../app/routes/index_route');
-const productRoutes = require('./app/routes/product_routes');
-const artworkRoutes = require('./app/routes/artwork_routes');
-const cartRoutes = require('./app/routes/cart_routes');
-const purchaseRoutes = require('./app/routes/purchase_routes');
-const userRoutes = require('./app/routes/user_routes');
-const stripeRoutes = require('./app/routes/stripe_routes');
+// route files
+import indexRouter from './app/routes/index_route';
+import artistRouter from './app/routes/artist_routes';
+import artworkRouter from './app/routes/artwork_routes';
+import galleryRouter from './app/routes/gallery_routes';
+import imageRouter from './app/routes/image_routes';
+import progressRouter from './app/routes/progress_routes';
 
-// require error handling middleware
-const errorHandler = require('./lib/error_handler');
+// error handling middleware
+import errorHandler from './app/lib/error_handler';
 
-// require database configuration logic
-// `db` will be the actual Mongo URI as a string
-const db = require('./config/db');
+// database configuration logic
+import databaseUri from './config/db';
 
-// require configured passport authentication middleware
-const auth = require('./lib/auth');
+// configured passport authentication middleware
+import auth from './app/lib/auth';
 
 // establish database connection
-mongoose.Promise = global.Promise;
-mongoose.connect(db, {
-  useMongoClient: true
+mongoose.connect(databaseUri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 });
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // instantiate express application object
 const app = express();
@@ -58,21 +58,20 @@ app.use(auth);
 // add `bodyParser` middleware which will parse JSON requests into
 // JS objects before they reach the route files.
 // The method `.use` sets up middleware for the Express application
-app.use(bodyParser.json());
+app.use(json());
 // this parses requests sent by `$.ajax`, which use a different content type
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(urlencoded({ extended: true }));
 
 // set static directory
 app.use(express.static('public'));
 
 // register route files
-app.use(indexRoute);
-app.use(productRoutes);
-app.use(artworkRoutes);
-app.use(cartRoutes);
-app.use(userRoutes);
-app.use(purchaseRoutes);
-app.use(stripeRoutes);
+app.use(indexRouter);
+app.use(artworkRouter);
+app.use(artistRouter);
+app.use(galleryRouter);
+app.use(imageRouter);
+app.use(progressRouter);
 
 // register error handling middleware
 // note that this comes after the route middlewares, because it needs to be
@@ -85,4 +84,4 @@ app.listen(port, () => {
 });
 
 // needed for testing
-module.exports = app;
+export default app;

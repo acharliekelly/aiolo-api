@@ -1,23 +1,23 @@
+// TODO: move to Koios
+
 // Express docs: http://expressjs.com/en/api.html
-const express = require('express')
+import { Router } from 'express'
 // pull in Mongoose model for examples
-const Purchase = require('../models/purchase')
+import { find } from '../models/purchase'
 
 // Passport docs: http://www.passportjs.org/docs/
-const passport = require('passport')
+import { authenticate } from 'passport'
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
-// const customErrors = require('../../lib/custom_errors')
-// const requireOwnership = customErrors.requireOwnership
-const requireToken = passport.authenticate('bearer', { session: false })
+const requireToken = authenticate('bearer', { session: false })
 
 // instantiate a router (mini app that only handles routes)
-const router = express.Router()
+const router = Router()
 
 // INDEX
 router.get('/purchases', requireToken, (req, res, next) => {
-  Purchase.find({ closed: true, owner: req.user.id })
+  find({ closed: true, owner: req.user.id })
     .populate('items')
     .then(purchases => {
       // `purchases will be an array of Mongoose documents
@@ -32,4 +32,4 @@ router.get('/purchases', requireToken, (req, res, next) => {
     .catch(next)
 })
 
-module.exports = router
+export default router

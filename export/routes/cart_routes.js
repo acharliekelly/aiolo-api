@@ -1,30 +1,28 @@
+// TODO: move to Koios
+
 // Express docs: http://expressjs.com/en/api.html
-const express = require('express')
+import { Router } from 'express'
 
 // Passport docs: http://www.passportjs.org/docs/
-const passport = require('passport')
+import { authenticate } from 'passport'
 
 // pull in Mongoose model for purchases
-const Purchase = require('../models/purchase')
+import { findOne, create } from '../models/purchase'
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
-const customErrors = require('../../lib/custom_errors')
+import { handle404, requireOwnership } from '../../lib/custom_errors'
 
-// we'll use this function to send 404 when non-existant document is requested
-const handle404 = customErrors.handle404
-
-const requireOwnership = customErrors.requireOwnership
-const requireToken = passport.authenticate('bearer', { session: false })
+const requireToken = authenticate('bearer', { session: false })
 
 // instantiate a router (mini app that only handles routes)
-const router = express.Router()
+const router = Router()
 
 // SHOW
 // GET /examples/5a7db6c74d55bc51bdf39793
 router.get('/cart', requireToken, (req, res, next) => {
   // req.params.id will be set based on the `:id` in the route
-  Purchase.findOne({ closed: false, owner: req.user.id })
+  findOne({ closed: false, owner: req.user.id })
     .populate('items')
     .exec(function (err, product) {
       if (err) throw err
@@ -36,7 +34,7 @@ router.get('/cart', requireToken, (req, res, next) => {
     .catch(() => {
       req.body.purchase = {}
       req.body.purchase.owner = req.user.id
-      Purchase.create(req.body.purchase, function (err, cart) {
+      create(req.body.purchase, function (err, cart) {
         if (err) console.log(err)
         return cart
       })
@@ -62,7 +60,7 @@ router.post('/cart', requireToken, (req, res, next) => {
   console.log(req.body.purchase)
   req.body.purchase.owner = req.user.id
   console.log(req.body.purchase)
-  Purchase.create(req.body.purchase, function (err, cart) {
+  create(req.body.purchase, function (err, cart) {
     if (err) console.log(err)
     return cart
   })
@@ -90,7 +88,7 @@ router.patch('/add-item/:id', requireToken, (req, res, next) => {
   // owner, prevent that by deleting that key/value pair
   // delete req.body.purchase.owner
 
-  Purchase.findOne({ closed: false, owner: req.user.id })
+  findOne({ closed: false, owner: req.user.id })
     .then(handle404)
     .then(cart => {
       requireOwnership(req, cart)
@@ -114,7 +112,7 @@ router.patch('/add-item/:id', requireToken, (req, res, next) => {
 // DELETE
 // DELETE item from cart
 router.delete('/remove-item/:id', requireToken, (req, res, next) => {
-  Purchase.findOne({ closed: false, owner: req.user.id })
+  findOne({ closed: false, owner: req.user.id })
     .then(handle404)
     .then(cart => {
       cart.items.pull(req.params.id)
@@ -133,7 +131,7 @@ router.delete('/remove-item/:id', requireToken, (req, res, next) => {
 // UPDATE
 // UPDATE closed status to true
 router.patch('/checkout', requireToken, (req, res, next) => {
-  Purchase.findOne({ closed: false, owner: req.user.id })
+  findOne({ closed: false, owner: req.user.id })
     .then(handle404)
     .then(cart => {
       return cart.update({ closed: true })
@@ -141,7 +139,7 @@ router.patch('/checkout', requireToken, (req, res, next) => {
     .then(() => {
       req.body.purchase = {}
       req.body.purchase.owner = req.user.id
-      Purchase.create(req.body.purchase, function (err, cart) {
+      create(req.body.purchase, function (err, cart) {
         if (err) console.log(err)
         return cart
       })
@@ -163,4 +161,4 @@ router.patch('/checkout', requireToken, (req, res, next) => {
     .catch(next)
 })
 
-module.exports = router
+export default router

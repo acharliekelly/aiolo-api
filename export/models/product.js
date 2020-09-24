@@ -1,6 +1,7 @@
-const mongoose = require('mongoose')
+// TODO: move to Koios
+import { Schema, model } from 'mongoose'
 
-const productSchema = new mongoose.Schema({
+const productSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -8,10 +9,11 @@ const productSchema = new mongoose.Schema({
   },
   price: {
     type: Number,
-    required: true
+    required: true,
+    default: 1
   },
   artwork: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Artwork',
     required: true
   },
@@ -22,4 +24,4 @@ const productSchema = new mongoose.Schema({
   timestamps: true
 })
 
-module.exports = mongoose.model('Product', productSchema)
+export default model('Product', productSchema)
