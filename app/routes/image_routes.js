@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { find, findById } from '../models/image';
+import Image from '../models/image';
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
@@ -11,7 +11,7 @@ const router = Router();
 
 // INDEX
 router.get('/image', (req, res, next) => {
-  find()
+  Image.find()
     .then(image => {
       return image.map(item => item.toObject());
     })
@@ -21,7 +21,7 @@ router.get('/image', (req, res, next) => {
 
 // SHOW
 router.get('/image/:id', (req, res, next) => {
-  findById(req.params.id)
+  Image.findById(req.params.id)
     .then(handle404)
     .then(item => res.status(STATUS.OK).json({ image: item.toObject() }))
     .catch(next)

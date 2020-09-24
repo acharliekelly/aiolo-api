@@ -1,5 +1,3 @@
-// TODO: move to Koios
-
 import { Router } from 'express'
 // jsonwebtoken docs: https://github.com/auth0/node-jsonwebtoken
 import { randomBytes } from 'crypto'
@@ -9,7 +7,7 @@ import { authenticate } from 'passport'
 import { hash as _hash, compare } from 'bcrypt'
 // pull in error types and the logic to handle them and set status codes
 import { BadParamsError, BadCredentialsError } from '../../lib/custom_errors';
-import { create, findOne, findById } from '../models/user'
+import User from '../models/user'
 
 // see above for explanation of "salting", 10 rounds is recommended
 const bcryptSaltRounds = 10
@@ -46,7 +44,7 @@ router.post('/sign-up', (req, res, next) => {
       }
     })
     // create user with provided email and hashed password
-    .then(user => create(user))
+    .then(user => User.create(user))
     // send the new user object back with status 201, but `hashedPassword`
     // won't be send because of the `transform` in the User model
     .then(user => res.status(201).json({ user: user.toObject() }))
@@ -61,7 +59,7 @@ router.post('/sign-in', (req, res, next) => {
   let user
 
   // find a user based on the email that was passed
-  findOne({ email: req.body.credentials.email })
+  User.findOne({ email: req.body.credentials.email })
     .then(record => {
       // if we didn't find a user with that email, send 401
       if (!record) {
@@ -99,7 +97,7 @@ router.post('/sign-in', (req, res, next) => {
 router.patch('/change-password', requireToken, (req, res, next) => {
   let user
   // `req.user` will be determined by decoding the token payload
-  findById(req.user.id)
+  User.findById(req.user.id)
     // save user outside the promise chain
     .then(record => { user = record })
     // check that the old password is correct

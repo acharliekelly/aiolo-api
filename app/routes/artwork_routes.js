@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { find, findById } from '../models/artwork';
+import Artwork from '../models/artwork';
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
@@ -11,7 +11,7 @@ const router = Router();
 
 // INDEX
 router.get('/artwork', (req, res, next) => {
-  find()
+  Artwork.find()
     .then(artwork => {
       return artwork.map(item => item.toObject());
     })
@@ -21,10 +21,16 @@ router.get('/artwork', (req, res, next) => {
 
 // SHOW
 router.get('/artwork/:id', (req, res, next) => {
-  findById(req.params.id)
+  Artwork.findById(req.params.id)
     .then(handle404)
     .then(item => res.status(STATUS.OK).json({ artwork: item.toObject() }))
     .catch(next)
 });
+
+// CREATE
+
+// UPDATE
+
+// DELETE
 
 export default router;

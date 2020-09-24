@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { find, findById } from '../models/progressList';
+import ProgressList from '../models/progressList';
 
 import { handle404 } from '../lib/custom_errors';
 import * as STATUS from './route_constants';
@@ -8,7 +8,7 @@ const router = Router();
 
 // INDEX
 router.get('/progress', (req, res, next) => {
-  find()
+  ProgressList.find()
     .then(progressList => {
       return progressList.map(item => item.toObject());
     })
@@ -18,7 +18,7 @@ router.get('/progress', (req, res, next) => {
 
 // SHOW
 router.get('/progress/:id', (req, res, next) => {
-  findById(req.params.id)
+  ProgressList.findById(req.params.id)
     .then(handle404)
     .then(item => res.status(STATUS.OK).json({ progressList: item.toObject() }))
     .catch(next)
