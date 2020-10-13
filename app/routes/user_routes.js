@@ -1,29 +1,24 @@
-const express = require('express')
+import { Router } from 'express'
 // jsonwebtoken docs: https://github.com/auth0/node-jsonwebtoken
-const crypto = require('crypto')
+import { randomBytes } from 'crypto'
 // Passport docs: http://www.passportjs.org/docs/
-const passport = require('passport')
+import { authenticate } from 'passport'
 // bcrypt docs: https://github.com/kelektiv/node.bcrypt.js
-const bcrypt = require('bcrypt')
+import { hash as _hash, compare } from 'bcrypt'
+// pull in error types and the logic to handle them and set status codes
+import { BadParamsError, BadCredentialsError } from '../lib/custom_errors';
+import User from '../models/user'
 
 // see above for explanation of "salting", 10 rounds is recommended
 const bcryptSaltRounds = 10
 
-// pull in error types and the logic to handle them and set status codes
-const errors = require('../../lib/custom_errors')
-
-const BadParamsError = errors.BadParamsError
-const BadCredentialsError = errors.BadCredentialsError
-
-const User = require('../models/user')
-
 // passing this as a second argument to `router.<verb>` will make it
 // so that a token MUST be passed for that route to be available
 // it will also set `res.user`
-const requireToken = passport.authenticate('bearer', { session: false })
+const requireToken = authenticate('bearer', { session: false })
 
 // instantiate a router (mini app that only handles routes)
-const router = express.Router()
+const router = Router()
 
 // SIGN UP
 // POST /sign-up
@@ -40,7 +35,7 @@ router.post('/sign-up', (req, res, next) => {
       }
     })
     // generate a hash from the provided password, returning a promise
-    .then(() => bcrypt.hash(req.body.credentials.password, bcryptSaltRounds))
+    .then(() => _hash(req.body.credentials.password, bcryptSaltRounds))
     .then(hash => {
       // return necessary params to create a user
       return {
@@ -74,13 +69,13 @@ router.post('/sign-in', (req, res, next) => {
       user = record
       // `bcrypt.compare` will return true if the result of hashing `pw`
       // is exactly equal to the hashed password stored in the DB
-      return bcrypt.compare(pw, user.hashedPassword)
+      return compare(pw, user.hashedPassword)
     })
     .then(correctPassword => {
       // if the passwords matched
       if (correctPassword) {
         // the token will be a 16 byte random hex string
-        const token = crypto.randomBytes(16).toString('hex')
+        const token = randomBytes(16).toString('hex')
         user.token = token
         // save the token to the DB as a property on user
         return user.save()
@@ -106,7 +101,7 @@ router.patch('/change-password', requireToken, (req, res, next) => {
     // save user outside the promise chain
     .then(record => { user = record })
     // check that the old password is correct
-    .then(() => bcrypt.compare(req.body.passwords.old, user.hashedPassword))
+    .then(() => compare(req.body.passwords.old, user.hashedPassword))
     // `correctPassword` will be true if hashing the old password ends up the
     // same as `user.hashedPassword`
     .then(correctPassword => {
@@ -117,7 +112,7 @@ router.patch('/change-password', requireToken, (req, res, next) => {
       }
     })
     // hash the new password
-    .then(() => bcrypt.hash(req.body.passwords.new, bcryptSaltRounds))
+    .then(() => _hash(req.body.passwords.new, bcryptSaltRounds))
     .then(hash => {
       // set and save the new hashed password in the DB
       user.hashedPassword = hash
@@ -131,11 +126,11 @@ router.patch('/change-password', requireToken, (req, res, next) => {
 
 router.delete('/sign-out', requireToken, (req, res, next) => {
   // create a new random token for the user, invalidating the current one
-  req.user.token = crypto.randomBytes(16)
+  req.user.token = randomBytes(16)
   // save the token and respond with 204
   req.user.save()
     .then(() => res.sendStatus(204))
     .catch(next)
 })
 
-module.exports = router
+export default router

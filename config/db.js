@@ -1,21 +1,34 @@
-'use strict';
+// create the MongoDB URI
 
-// creating a base name for the mongodb
-const mongooseBaseName = 'aiolo-api';
-
-// create the mongodb uri for development and test
-const database = {
-  development: `mongodb://localhost/${mongooseBaseName}-development`,
-  test: `mongodb://localhost/${mongooseBaseName}-test`
+const dbDev = {
+  protocol: 'mongodb+srv',
+  user: 'aiolo-usr',
+  password: process.env.MONGODB_PWD,
+  host: 'cluster0.arkws.mongodb.net',
+  db: 'aioloTest'
 };
 
-// Identify if development environment is test or development
-// select DB based on whether a test file was executed before `server.js`
-const localDb = process.env.TESTENV ? database.test : database.development;
+const dbProd = {
+  protocol: 'mongodb+srv',
+  user: 'aiolo-usr',
+  password: process.env.MONGODB_PWD,
+  host: 'cluster0.arkws.mongodb.net',
+  db: 'aiolo'
+};
 
-// Environment variable DB_URI will be available in
-//    -- updated 2020-07-12: changed Mongo containers bc mLab discontinued
-// heroku production evironment otherwise use test or development db
-const currentDb = process.env.DB_URI || localDb;
+export const createUri = env => {
+  let db;
+  if (env === 'production') {
+    db = dbProd;
+  } else {
+    // return 'mongodb://localhost/aiolo';
+    db = dbDev;
+  }
+  return `${db.protocol}://${db.user}:${db.password}@${db.host}/${db.db}?retryWrites=true&w=majority`;
+}
 
-module.exports = currentDb;
+// export const developmentUri = `mongodb://localhost/aiolo`;
+export const developmentUri = createUri('development');
+export const productionUri = createUri('production');
+export const testUri = createUri('test');
+export const databaseUri = createUri(process.env.NODE_ENV);

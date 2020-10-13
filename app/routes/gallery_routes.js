@@ -1,79 +1,195 @@
-const express = require('express');
-// const passport = require('passport');
-const { fetchGallery } = require('../../lib/cloudApi');
+import { Router } from 'express';
 
-const Gallery = require('../models/gallery');
-// const Artwork = require('../models/artwork');
+// Passport docs: http://www.passportjs.org/docs/
+import { authenticate } from 'passport'
+import { fetchGallery } from '../lib/cloudApi';
+
+import Gallery from '../models/gallery';
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
-const customErrors = require('../../lib/custom_errors')
-// we'll use this function to send 404 when non-existant document is requested
-const handle404 = customErrors.handle404
-// use this to prevent anyone but admin from modifying products
-// const requireAdmin = customErrors.requireAdmin
+import { handle404 } from '../lib/custom_errors';
+import * as STATUS from './route_constants';
 
-// this is middleware that will remove blank fields from `req.body`, e.g.
-// { example: { title: '', text: 'foo' } } -> { example: { text: 'foo' } }
-// const removeBlanks = require('../../lib/remove_blank_fields')
-
-// passing this as a second argument to `router.<verb>` will make it
-// so that a token MUST be passed for that route to be available
-// it will also set `req.user`
-// const requireToken = passport.authenticate('bearer', { session: false })
+// const requireToken = authenticate('bearer', { session: false });
 
 // instantiate a router (mini app that only handles routes)
-const router = express.Router();
+const router = Router();
 
+const requireToken = authenticate('bearer', { session: false });
+
+/**
+ * INDEX
+ * GET /galleries
+ * all galleries
+ */
 router.get('/galleries', (req, res, next) => {
   Gallery.find()
     .then(galleries => {
       return galleries.map(gallery => gallery.toObject())
     })
-    .then(galleries => res.status(200).json({ galleries }))
+    .then(galleries => res.status(STATUS.OK).json({ galleries }))
     .catch(next)
 });
 
+/**
+ * GET /albums
+ * only Album galleries
+ */
 router.get('/albums', (req, res, next) => {
   Gallery.find({ filter: 'album' })
     .then(galleries => {
       return galleries.map(gallery => gallery.toObject())
     })
-    .then(galleries => res.status(200).json({ galleries }))
+    .then(galleries => res.status(STATUS.OK).json({ galleries }))
     .catch(next)
 });
 
+/**
+ * GET /filters
+ * non-Album galleries
+ */
 router.get('/filters', (req, res, next) => {
   Gallery.find({ filter: !'album' })
     .then(galleries => {
       return galleries.map(gallery => gallery.toObject())
     })
-    .then(galleries => res.status(200).json({ galleries }))
+    .then(galleries => res.status(STATUS.OK).json({ galleries }))
     .catch(next)
 });
 
+/**
+ * GET /filters/:name
+ * named filter
+ */
 router.get('/filters/:name', (req, res, next) => {
-  Gallery.find({ filter: req.params.name })
+  Gallery.findOne({ filter: req.params.name })
     .then(galleries => {
       return galleries.map(gallery => gallery.toObject())
     })
-    .then(galleries => res.status(200).json({ galleries }))
+    .then(galleries => res.status(STATUS.OK).json({ galleries }))
     .catch(next)
 });
 
-router.get('/tag/:id', (req, res, next) => {
+/**
+ * SHOW
+ * GET /galleries/:id
+ * gallery by Id
+ */
+router.get('/galleries/:id', (req, res, next) => {
   Gallery.findById(req.params.id)
     .then(handle404)
-    .then(item => res.status(200).json({ tag: item.toObject() }))
+    .then(item => res.status(STATUS.OK).json({ tag: item.toObject() }))
     .catch(next)
 });
 
+/**
+ * GET /gallery/:tag
+ * Returns <tag>.json from Cloudinary
+ * (list of artwork from gallery, on old system - use for import only)
+ */
 router.get('/gallery/:tag', (req, res, next) => {
   const tagName = req.params.tag;
   fetchGallery(tagName)
     .then(resources => {
       return resources.map(resource => resource.toObject())
     })
-    .then(resources => res.status(200).json({ resources }))
+    .then(resources => res.status(STATUS.OK).json({ resources }))
     .catch(next)
+});
+
+/**
+ * POST /gallery
+ * create gallery
+ */
+router.post('/galleries', requireToken, (req, res, next) => {
+  console.log(req.body.gallery);
+  Gallery.create(req.body.gallery, function (err, gallery) {
+    if (err) console.log(err);
+    return gallery;
+  }).then(gallery => {
+    return gallery;
+  }).then(gallery => {
+    res.status(STATUS.CREATED).json({ gallery: gallery.toObject() })
+  }).catch(next);
+});
+
+/**
+ * PATCH /gallery/:id
+ * update gallery
+ */
+router.patch('/galleries/:id', requireToken, (req, res, next) => {
+  Gallery.findByIdAndUpdate(req.params.id, req.body.gallery)
+    .then(handle404)
+    .then(gallery => {
+      gallery.save(function (err) {
+        if (err) {
+          console.log(err);
+        }
+      })
+      return gallery;
+    }).then(gallery => {
+      res.status(STATUS.CREATED).json({ gallery: gallery.toObject() })
+    }).catch(next);
+});
+
+/**
+ * DESTROY /gallery/:id
+ * delete gallery
+ */
+router.delete('/galleries/:id', requireToken, (req, res, next) => {
+  Gallery.findByIdAndDelete(req.params.id)
+    .then(gallery => {
+      res.status(204).json()
+    })
+});
+
+/**
+ * NO TOKEN
+ * remove for production
+ */
+/**
+ * POST /gallery
+ * create gallery
+ */
+router.post('/galleries-f', (req, res, next) => {
+  console.log(req.body.gallery);
+  Gallery.create(req.body.gallery, function (err, gallery) {
+    if (err) console.log(err);
+    return gallery;
+  }).then(gallery => {
+    return gallery;
+  }).then(gallery => {
+    res.status(STATUS.CREATED).json({ gallery: gallery.toObject() })
+  }).catch(next);
+});
+
+/**
+ * PATCH /gallery/:id
+ * update gallery
+ */
+router.patch('/galleries-f/:id', (req, res, next) => {
+  Gallery.findByIdAndUpdate(req.params.id, req.body.gallery)
+    .then(handle404)
+    .then(gallery => {
+      gallery.save(function (err) {
+        if (err) {
+          console.log(err);
+        }
+      })
+      return gallery;
+    }).then(gallery => {
+      res.status(STATUS.CREATED).json({ gallery: gallery.toObject() })
+    }).catch(next);
+});
+
+/**
+ * DESTROY /gallery/:id
+ * delete gallery
+ */
+router.delete('/galleries-f/:id', (req, res, next) => {
+  Gallery.findByIdAndDelete(req.params.id)
+    .then(gallery => {
+      res.status(204).json()
+    })
 });
