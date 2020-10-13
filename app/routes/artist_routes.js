@@ -5,7 +5,7 @@ import { authenticate } from 'passport';
 
 import Artist from '../models/artist';
 
-import { handle404, requireAdmin } from '../lib/custom_errors';
+import { handle404 } from '../lib/custom_errors';
 import * as STATUS from './route_constants';
 
 const router = Router();
@@ -29,11 +29,15 @@ router.get('/artists/:id', (req, res, next) => {
     .catch(next)
 });
 
-// CREATE
 router.post('/artist', requireToken, (req, res, next) => {
-  console.log(req.body.artist);
-  req.body.artist.user = req.user.id;
-  // TODO: complete
+  Artist.create(req.body.artist, function (err, artist) {
+    if (err) console.log(err);
+    return artist;
+  }).then(artist => {
+    return artist;
+  }).then(artist => {
+    res.status(STATUS.CREATED).json({ artist: artist.toObject() })
+  }).catch(next);
 });
 
 // UPDATE
@@ -41,5 +45,17 @@ router.post('/artist', requireToken, (req, res, next) => {
 
 // DESTROY
 // TODO: add route
+
+// NO TOKEN (remove for production)
+router.post('/artist-f', (req, res, next) => {
+  Artist.create(req.body.artist, function (err, artist) {
+    if (err) console.log(err);
+    return artist;
+  }).then(artist => {
+    return artist;
+  }).then(artist => {
+    res.status(STATUS.CREATED).json({ artist: artist.toObject() })
+  }).catch(next);
+});
 
 export default router;

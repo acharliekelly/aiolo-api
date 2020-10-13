@@ -6,7 +6,7 @@ import { authenticate } from 'passport'
 // bcrypt docs: https://github.com/kelektiv/node.bcrypt.js
 import { hash as _hash, compare } from 'bcrypt'
 // pull in error types and the logic to handle them and set status codes
-import { BadParamsError, BadCredentialsError } from '../../lib/custom_errors';
+import { BadParamsError, BadCredentialsError } from '../lib/custom_errors';
 import User from '../models/user'
 
 // see above for explanation of "salting", 10 rounds is recommended
