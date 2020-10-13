@@ -5,7 +5,7 @@ import { Router } from 'express'
 import { authenticate } from 'passport'
 
 // pull in Mongoose model for products
-import { find, findById, create, findByIdAndDelete } from '../models/product'
+import Product from '../models/product'
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
@@ -26,7 +26,7 @@ const router = Router()
 // INDEX
 // GET /products
 router.get('/products', (req, res, next) => {
-  find()
+  Product.find()
     .then(products => {
       // `products will be an array of Mongoose documents
       // we want to convert each one to a POJO, so we use `.map` to
@@ -42,7 +42,7 @@ router.get('/products', (req, res, next) => {
 // SHOW
 // GET /products/:id
 router.get('/products/:id', (req, res, next) => {
-  findById(req.params.id)
+  Product.findById(req.params.id)
     .then(handle404)
     .then(product => res.status(200).json({ product: product.toObject() }))
     .catch(next)
@@ -52,7 +52,7 @@ router.get('/products/:id', (req, res, next) => {
 // POST /products
 router.post('/products', requireToken, removeBlanks, (req, res, next) => {
   requireAdmin(req)
-  create(req.body.product)
+  Product.create(req.body.product)
     .then(product => {
       res.status(201).json({ product: product.toObject() })
     })
@@ -63,7 +63,7 @@ router.post('/products', requireToken, removeBlanks, (req, res, next) => {
 // PATCH /products/:id
 router.patch('/products/:id', requireToken, removeBlanks, (req, res, next) => {
   requireAdmin(req)
-  findById(req.params.id)
+  Product.findById(req.params.id)
     .then(handle404)
     .then(product => product.update(req.body.product))
     .then(() => res.sendStatus(204))
@@ -71,10 +71,10 @@ router.patch('/products/:id', requireToken, removeBlanks, (req, res, next) => {
 })
 
 // DESTROY
-// DELETE /products:id
+// DELETE /products/:id
 router.delete('/products/:id', requireToken, (req, res, next) => {
   requireAdmin(req)
-  findByIdAndDelete(req.params.id)
+  Product.findByIdAndDelete(req.params.id)
     .then(() => res.sendStatus(204))
     .catch(next)
 })

@@ -3,7 +3,7 @@
 // Express docs: http://expressjs.com/en/api.html
 import { Router } from 'express'
 // pull in Mongoose model for examples
-import { find } from '../models/purchase'
+import Purchase from '../models/purchase'
 
 // Passport docs: http://www.passportjs.org/docs/
 import { authenticate } from 'passport'
@@ -17,7 +17,7 @@ const router = Router()
 
 // INDEX
 router.get('/purchases', requireToken, (req, res, next) => {
-  find({ closed: true, owner: req.user.id })
+  Purchase.find({ closed: true, owner: req.user.id })
     .populate('items')
     .then(purchases => {
       // `purchases will be an array of Mongoose documents

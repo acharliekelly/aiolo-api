@@ -7,7 +7,7 @@ import { Router } from 'express'
 import { authenticate } from 'passport'
 
 // pull in Mongoose model for purchases
-import { findOne, create } from '../models/purchase'
+import Purchase from '../models/purchase';
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
@@ -22,7 +22,7 @@ const router = Router()
 // GET /examples/5a7db6c74d55bc51bdf39793
 router.get('/cart', requireToken, (req, res, next) => {
   // req.params.id will be set based on the `:id` in the route
-  findOne({ closed: false, owner: req.user.id })
+  Purchase.findOne({ closed: false, owner: req.user.id })
     .populate('items')
     .exec(function (err, product) {
       if (err) throw err
@@ -34,7 +34,7 @@ router.get('/cart', requireToken, (req, res, next) => {
     .catch(() => {
       req.body.purchase = {}
       req.body.purchase.owner = req.user.id
-      create(req.body.purchase, function (err, cart) {
+      Purchase.create(req.body.purchase, function (err, cart) {
         if (err) console.log(err)
         return cart
       })
@@ -60,7 +60,7 @@ router.post('/cart', requireToken, (req, res, next) => {
   console.log(req.body.purchase)
   req.body.purchase.owner = req.user.id
   console.log(req.body.purchase)
-  create(req.body.purchase, function (err, cart) {
+  Purchase.create(req.body.purchase, function (err, cart) {
     if (err) console.log(err)
     return cart
   })
@@ -88,7 +88,7 @@ router.patch('/add-item/:id', requireToken, (req, res, next) => {
   // owner, prevent that by deleting that key/value pair
   // delete req.body.purchase.owner
 
-  findOne({ closed: false, owner: req.user.id })
+  Purchase.findOne({ closed: false, owner: req.user.id })
     .then(handle404)
     .then(cart => {
       requireOwnership(req, cart)
@@ -112,7 +112,7 @@ router.patch('/add-item/:id', requireToken, (req, res, next) => {
 // DELETE
 // DELETE item from cart
 router.delete('/remove-item/:id', requireToken, (req, res, next) => {
-  findOne({ closed: false, owner: req.user.id })
+  Purchase.findOne({ closed: false, owner: req.user.id })
     .then(handle404)
     .then(cart => {
       cart.items.pull(req.params.id)
@@ -131,7 +131,7 @@ router.delete('/remove-item/:id', requireToken, (req, res, next) => {
 // UPDATE
 // UPDATE closed status to true
 router.patch('/checkout', requireToken, (req, res, next) => {
-  findOne({ closed: false, owner: req.user.id })
+  Purchase.findOne({ closed: false, owner: req.user.id })
     .then(handle404)
     .then(cart => {
       return cart.update({ closed: true })
@@ -139,7 +139,7 @@ router.patch('/checkout', requireToken, (req, res, next) => {
     .then(() => {
       req.body.purchase = {}
       req.body.purchase.owner = req.user.id
-      create(req.body.purchase, function (err, cart) {
+      Purchase.create(req.body.purchase, function (err, cart) {
         if (err) console.log(err)
         return cart
       })
