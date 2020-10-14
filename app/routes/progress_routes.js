@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import { authenticate } from 'passport';
 import ProgressList from '../models/progressList';
+// import ProgressImage from '../models/progressImage';
 
 import { handle404 } from '../lib/custom_errors';
+import { addProgressImage } from '../lib/utils';
 import * as STATUS from './route_constants';
 
 const router = Router();
@@ -39,8 +41,6 @@ router.post('/progress', requireToken, (req, res, next) => {
     if (err) console.log(err);
     return progress;
   }).then(progressList => {
-    return progressList;
-  }).then(progressList => {
     res.status(STATUS.CREATED).json({ progressList: progressList.toObject() })
   }).catch(next);
 });
@@ -49,12 +49,10 @@ router.post('/progress', requireToken, (req, res, next) => {
 * UPDATE
 */
 router.patch('/progress/:id', requireToken, (req, res, next) => {
-  const { artworkId, images } = req.body;
-  ProgressList.findByIdAndUpdate(req.params.id, { artworkId, images })
+  const { artworkId, progressImages } = req.body;
+  ProgressList.findByIdAndUpdate(req.params.id, { artworkId, progressImages })
     .then(handle404)
     .then(progressList => {
-      return progressList;
-    }).then(progressList => {
       res.status(STATUS.CREATED).json({ progressList: progressList.toObject() })
     }).catch(next)
 });
@@ -64,18 +62,16 @@ router.patch('/progress/:id', requireToken, (req, res, next) => {
  * add one image to progress list
  * takes image._id, not publicId
  */
-router.get('/add-progress/:progressId/:imageId', requireToken, (req, res, next) => {
-  const { progressId, imageId } = req.params;
-  ProgressList.findById(progressId)
-    .then(progressObj => {
-      progressObj.images.push(imageId);
-      progressObj.save(function (err, prog) {
-        if (err) console.log(err);
-        return prog;
-      })
-    }).then(progressList => {
-      res.status(STATUS.CREATED).json({ progressList: progressList.toObject() })
-    }).catch(next)
+router.post('/progress/:progressId/addImage', requireToken, (req, res, next) => {
+  const { progressId } = req.params;
+  const { imageId, sequence, taken, isFinal } = req.body;
+  const added = addProgressImage(progressId, imageId, sequence, taken, isFinal);
+
+  if (added) {
+    res.status(STATUS.OK).json();
+  } else {
+    res.status(STATUS.ERR_BAD_REQUEST).json();
+  }
 });
 
 /**
@@ -114,25 +110,6 @@ router.patch('/progress-f/:id', (req, res, next) => {
     .then(handle404)
     .then(progressList => {
       return progressList;
-    }).then(progressList => {
-      res.status(STATUS.CREATED).json({ progressList: progressList.toObject() })
-    }).catch(next)
-});
-
-/**
- * ADD IMAGE
- * add one image to progress list
- * takes image._id, not publicId
- */
-router.get('/add-progress-f/:progressId/:imageId', (req, res, next) => {
-  const { progressId, imageId } = req.params;
-  ProgressList.findById(progressId)
-    .then(progressObj => {
-      progressObj.images.push(imageId);
-      progressObj.save(function (err, prog) {
-        if (err) console.log(err);
-        return prog;
-      })
     }).then(progressList => {
       res.status(STATUS.CREATED).json({ progressList: progressList.toObject() })
     }).catch(next)

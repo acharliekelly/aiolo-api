@@ -5,13 +5,16 @@ import Artwork from '../models/artwork';
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
-import { handle404 } from '../lib/custom_errors';
+import { handle404, handleError } from '../lib/custom_errors';
+
 import * as STATUS from './route_constants';
 
 // instantiate a router (mini app that only handles routes)
 const router = Router();
 
 const requireToken = authenticate('bearer', { session: false })
+
+// RESTFUL
 
 // INDEX
 router.get('/artwork', (req, res, next) => {
@@ -34,7 +37,7 @@ router.get('/artwork/:id', (req, res, next) => {
 // CREATE
 router.post('/artwork', requireToken, (req, res, next) => {
   Artwork.create(req.body.artwork, function (err, art) {
-    if (err) console.log(err);
+    handleError(err);
     return art;
   }).then(artwork => {
     return artwork;
@@ -48,50 +51,50 @@ router.patch('/artwork/:id', requireToken, (req, res, next) => {
   Artwork.findByIdAndUpdate(req.params.id, req.body.artwork)
     .then(handle404)
     .then(artwork => {
-      artwork.save(function (err) {
-        if (err) {
-          console.log(err);
-        }
-      })
+      artwork.save(handleError)
       return artwork
     }).then(artwork => {
       res.status(STATUS.OK).json({ artwork: artwork.toObject() })
     }).catch(next)
 });
 
+// DELETE
+router.delete('/artwork/:id', requireToken, (req, res, next) => {
+  Artwork.findByIdAndDelete(req.params.id)
+    .then(() => {
+      res.status(STATUS.NO_CONTENT).json()
+    })
+    .catch(next)
+});
+
+// NON-RESTFUL
+
 // ADD TAG
-router.post('/artwork/:id/tags', requireToken, (req, res, next) => {
+router.post('/artwork/:id/galleries', requireToken, (req, res, next) => {
   Artwork.findById(req.params.id)
     .then(handle404)
     .then(artwork => {
-      artwork.tags.push(req.body.tagName)
-      artwork.save(function (err) {
-        if (err) {
-          console.log(err);
-        }
-      })
+      const { galleryId } = req.body;
+      artwork.tags.push(galleryId);
+      artwork.save(handleError)
       return artwork
     })
     .then(artwork => {
-      res.status(STATUS.OK).json();
+      res.status(STATUS.OK).json({ artwork: artwork.toObject() });
     })
     .catch(next)
 });
 
 // REMOVE TAG
-router.delete('/artwork/:id/tags/:tagname', requireToken, (req, res, next) => {
+router.delete('/artwork/:id/galleries/:galleryId', requireToken, (req, res, next) => {
   Artwork.findById(req.params.id)
     .then(handle404)
     .then(artwork => {
-      const removeTag = req.params.tagname;
-      if (artwork.tags.includes(removeTag)) {
-        const woTag = artwork.tags.filter(item => item !== removeTag);
+      const { tagname } = req.params;
+      if (artwork.tags.includes(tagname)) {
+        const woTag = artwork.tags.filter(item => item !== tagname);
         artwork.tags = woTag;
-        artwork.save(function (err) {
-          if (err) {
-            console.log(err);
-          }
-        })
+        artwork.save(handleError);
       }
       return artwork;
     })
@@ -108,15 +111,11 @@ router.post('/artwork/:id/filters', requireToken, (req, res, next) => {
     .then(artwork => {
       const { filterKey, filterValue } = req.body;
       artwork.filters[filterKey] = filterValue;
-      artwork.save(function (err) {
-        if (err) {
-          console.log(err);
-        }
-      })
+      artwork.save(handleError);
       return artwork;
     })
     .then(artwork => {
-      res.status(STATUS.OK).json();
+      res.status(STATUS.OK).json({ artwork: artwork.toObject() });
     })
     .catch(next)
 })
@@ -129,15 +128,11 @@ router.patch('/artwork/:id/filters/:filterKey', requireToken, (req, res, next) =
       const { filterKey } = req.params;
       const { filterValue } = req.body;
       artwork.filters[filterKey] = filterValue;
-      artwork.save(function (err) {
-        if (err) {
-          console.log(err);
-        }
-      })
+      artwork.save(handleError);
       return artwork;
     })
     .then(artwork => {
-      res.status(STATUS.OK).json();
+      res.status(STATUS.OK).json({ artwork: artwork.toObject() });
     })
     .catch(next)
 })
@@ -149,12 +144,8 @@ router.delete('/artwork/:id/filters/:filterKey', requireToken, (req, res, next) 
     .then(artwork => {
       const { filterKey } = req.params;
       if (artwork.filters[filterKey]) {
-        artwork.filters[filterKey] = undefined;
-        artwork.save(function (err) {
-          if (err) {
-            console.log(err);
-          }
-        })
+        artwork.filters[filterKey] = null;
+        artwork.save(handleError)
       }
       return artwork;
     })
@@ -164,24 +155,13 @@ router.delete('/artwork/:id/filters/:filterKey', requireToken, (req, res, next) 
     .catch(next)
 })
 
-// DELETE
-router.delete('/artwork/:id', requireToken, (req, res, next) => {
-  Artwork.findByIdAndDelete(req.params.id)
-    .then(artwork => {
-      res.status(204).json()
-    })
-    .catch(next)
-});
-
 // NO TOKEN (for import; remove for production)
 
 // CREATE FREE
 router.post('/artwork-f', (req, res, next) => {
   Artwork.create(req.body.artwork, function (err, art) {
-    if (err) console.log(err);
+    handleError(err);
     return art;
-  }).then(artwork => {
-    return artwork;
   }).then(artwork => {
     res.status(STATUS.CREATED).json({ artwork: artwork.toObject() })
   }).catch(next);
@@ -192,14 +172,10 @@ router.patch('/artwork-f/:id', (req, res, next) => {
   Artwork.findByIdAndUpdate(req.params.id, req.body.artwork)
     .then(handle404)
     .then(artwork => {
-      artwork.save(function (err) {
-        if (err) {
-          console.log(err);
-        }
-      })
+      artwork.save(handleError)
       return artwork
     }).then(artwork => {
-      res.status(STATUS.CREATED).json({ artwork: artwork.toObject() })
+      res.status(STATUS.OK).json({ artwork: artwork.toObject() })
     }).catch(next)
 })
 
@@ -207,8 +183,8 @@ router.patch('/artwork-f/:id', (req, res, next) => {
 router.delete('/artwork-f/:id', (req, res, next) => {
   Artwork.findByIdAndDelete(req.params.id)
     .then(handle404)
-    .then(artwork => {
-      res.status(204).json()
+    .then(() => {
+      res.status(STATUS.NO_CONTENT).json()
     })
     .catch(next)
 });

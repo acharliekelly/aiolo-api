@@ -5,7 +5,7 @@ import { authenticate } from 'passport';
 
 import Artist from '../models/artist';
 
-import { handle404 } from '../lib/custom_errors';
+import { handle404, handleError } from '../lib/custom_errors';
 import * as STATUS from './route_constants';
 
 const router = Router();
@@ -14,10 +14,10 @@ const requireToken = authenticate('bearer', { session: false });
 // INDEX
 router.get('/artists', (req, res, next) => {
   Artist.find()
-    .then(artist => {
-      return artist.map(item => item.toObject());
+    .then(artists => {
+      return artists.map(item => item.toObject());
     })
-    .then(artist => res.status(STATUS.OK).json({ artist }))
+    .then(artists => res.status(STATUS.OK).json({ artists }))
     .catch(next)
 });
 
@@ -29,11 +29,9 @@ router.get('/artists/:id', (req, res, next) => {
     .catch(next)
 });
 
-router.post('/artist', requireToken, (req, res, next) => {
+router.post('/artists', requireToken, (req, res, next) => {
   Artist.create(req.body.artist, function (err, artist) {
-    if (err) console.log(err);
-    return artist;
-  }).then(artist => {
+    handleError(err);
     return artist;
   }).then(artist => {
     res.status(STATUS.CREATED).json({ artist: artist.toObject() })
@@ -41,17 +39,26 @@ router.post('/artist', requireToken, (req, res, next) => {
 });
 
 // UPDATE
-// TODO: add route
+router.patch('/artists/:id', requireToken, (req, res, next) => {
+  Artist.findByIdAndUpdate(req.params.id, req.body.artist, function (err, artist) {
+    handleError(err);
+    return artist
+  }).then(artist => {
+    res.status(STATUS.OK).json({ artist: artist.toObject() })
+  }).catch(next)
+});
 
 // DESTROY
-// TODO: add route
+router.delete('/artists/:id', requireToken, (req, res, next) => {
+  Artist.findByIdAndDelete(req.params.id)
+    .then(() => res.status(STATUS.NO_CONTENT).json())
+    .catch(next)
+})
 
 // NO TOKEN (remove for production)
-router.post('/artist-f', (req, res, next) => {
+router.post('/artists-f', (req, res, next) => {
   Artist.create(req.body.artist, function (err, artist) {
-    if (err) console.log(err);
-    return artist;
-  }).then(artist => {
+    handleError(err);
     return artist;
   }).then(artist => {
     res.status(STATUS.CREATED).json({ artist: artist.toObject() })
