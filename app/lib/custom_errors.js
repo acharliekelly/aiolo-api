@@ -74,9 +74,20 @@ const handle404 = record => {
   }
 }
 
+const handleError = err => {
+  if (err) console.log(err);
+}
+
+const handleResponse = (err, obj) => {
+  handleError(err);
+  return obj;
+}
+
 export default {
-  requireOwnership,
+  handleError,
+  handleResponse,
   handle404,
+  requireOwnership,
   requireAdmin,
   BadParamsError,
   BadCredentialsError
