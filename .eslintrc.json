@@ -27,20 +27,20 @@
   },
 
   "rules": {
-    "accessor-pairs": "error",
-    "arrow-spacing": ["error", { "before": true, "after": true }],
-    "block-spacing": ["error", "always"],
+    "accessor-pairs": "warn",
+    "arrow-spacing": ["warn", { "before": true, "after": true }],
+    "block-spacing": ["warn", "always"],
     "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
     "camelcase": ["error", { "properties": "never" }],
-    "comma-dangle": ["error", {
+    "comma-dangle": ["warn", {
       "arrays": "never",
       "objects": "never",
       "imports": "never",
       "exports": "never",
       "functions": "never"
     }],
-    "comma-spacing": ["error", { "before": false, "after": true }],
-    "comma-style": ["error", "last"],
+    "comma-spacing": ["warn", { "before": false, "after": true }],
+    "comma-style": ["warn", "last"],
     "constructor-super": "error",
     "curly": ["error", "multi-line"],
     "dot-location": ["error", "property"],
