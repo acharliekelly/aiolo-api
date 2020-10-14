@@ -7,7 +7,9 @@ const artworkSchema = new Schema({
     required: true
   },
   publicId: {
-    type: String
+    type: String,
+    required: true,
+    alias: 'cloudId'
   },
   artworkType: {
     type: String,
@@ -70,7 +72,7 @@ const artworkSchema = new Schema({
     ref: 'Artist',
     required: true
   },
-  tags: [{ type: String }],
+  galleries: [{ type: Schema.Types.ObjectId, ref: 'Gallery' }],
   filters: {
     subject: { type: Schema.Types.ObjectId, ref: 'Gallery' },
     location: { type: Schema.Types.ObjectId, ref: 'Gallery' },
@@ -85,33 +87,65 @@ const artworkSchema = new Schema({
   timestamps: true
 });
 
-artworkSchema.virtual('material').get(function () {
-  let material = '';
+/**
+ * Material: <medium> on <surface>
+ */
+artworkSchema.virtual('material')
+  .get(function () {
+    let material = '';
 
-  if (this.medium && this.surface) {
-    material = this.medium + ' on ' + this.surface;
-  } else if (this.medium) {
-    // give medium alone, but not surface alone
-    material = this.medium;
-  }
-  return material;
-});
+    if (this.medium && this.surface) {
+      material = this.medium + ' on ' + this.surface;
+    } else if (this.medium) {
+      // give medium alone, but not surface alone
+      material = this.medium;
+    }
+    return material;
+  })
+  .set(function (material) {
+    const expr = /(.+) on (.+)/i;
+    let mtch = expr.exec(material);
+    if (mtch) {
+      this.medium = mtch[1];
+      this.surface = mtch[0];
+    }
+  });
 
-artworkSchema.virtual('size').get(function () {
-  let size = '';
-  // const units = this.dimensions.units === 'inches' ? '"' : this.dimensions.units;
-  if (this.dimensions) {
-    const w = this.dimensions.width;
-    const h = this.dimensions.height;
-    if (this.dimensions.width && this.dimensions.height) {
-      size = `${w}" x ${h}"`;
+/**
+ * Size: w" x h"
+ */
+artworkSchema.virtual('size')
+  .get(function () {
+    let size = '';
+    // const units = this.dimensions.units === 'inches' ? '"' : this.dimensions.units;
+    if (this.dimensions) {
+      const w = this.dimensions.width;
+      const h = this.dimensions.height;
+      if (this.dimensions.width && this.dimensions.height) {
+        size = `${w}" x ${h}"`;
 
-      if (this.dimensions.depth) {
-        size += ` ${this.dimensions.depth}"`;
+        if (this.dimensions.depth) {
+          size += ` ${this.dimensions.depth}"`;
+        }
       }
     }
-  }
-  return size;
-});
+    return size;
+  })
+  .set(function (size) {
+    const expr = /(\d+)"\s?x\s?(\d+)"/i;
+    let mtch = expr.exec(size);
+    if (mtch) {
+      this.dimensions.width = mtch[1];
+      this.dimensions.height = mtch[2];
+    }
+  });
+
+artworkSchema.statics.findByCloudId = function (cloudId) {
+  return this.find({ publicId: cloudId })
+};
+
+artworkSchema.statics.findByTitle = function (title) {
+  return this.find({ title: new RegExp(title, 'i') });
+};
 
 export default model('Artwork', artworkSchema);

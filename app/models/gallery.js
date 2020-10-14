@@ -23,7 +23,8 @@ const gallerySchema = new Schema({
   // default sorting
   sortBy: {
     field: {
-      type: String
+      type: String,
+      default: 'completed'
     },
     descending: {
       type: Boolean
@@ -36,5 +37,13 @@ const gallerySchema = new Schema({
 }, {
   timestamps: true
 });
+
+/**
+ * findByTag
+ *  @param {String} tagStr the tag
+ */
+gallerySchema.statics.findByTag = function (tagStr) {
+  return this.find({ tag: tagStr })
+};
 
 export default model('Gallery', gallerySchema);

@@ -1,5 +1,3 @@
-// TODO: move to Koios/Lelantos
-
 import { Schema, model } from 'mongoose'
 
 const userSchema = new Schema({

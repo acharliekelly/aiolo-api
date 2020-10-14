@@ -1,5 +1,3 @@
-// TODO: move to Koios/Lelantos
-// no need for user tokens here
 
 import { Schema, model } from 'mongoose'
 
