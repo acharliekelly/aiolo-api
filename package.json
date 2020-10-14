@@ -2,10 +2,10 @@
   "name": "aiolo-api",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "mocha --exit",
+    "start": "SET NODE_ENV=dev && node server.js",
+    "test": "mocha --timeout 10000 --exit",
     "server": "nodemon server.js",
     "serve": "nodemon server.js",
     "s": "nodemon server.js",
@@ -24,6 +24,7 @@
     "jsonwebtoken": "^8.1.1",
     "mongodb": "^2.2.31",
     "mongoose": "^4.12.0",
+    "morgan": "^1.10.0",
     "passport": "^0.4.0",
     "passport-http-bearer": "^1.0.1",
     "stripe": "^6.28.0"
