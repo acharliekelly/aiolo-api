@@ -3,6 +3,7 @@ import express from 'express';
 import { json, urlencoded } from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import morgan from 'morgan';
 
 // route files
 import indexRouter from './app/routes/index_route';
@@ -31,6 +32,10 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // instantiate express application object
 const app = express();
+
+if (process.env.NODE_ENV !== 'test') {
+  app.use(morgan('combined'));
+}
 
 // set CORS headers on response from this API using the `cors` NPM package
 // `CLIENT_ORIGIN` is an environment variable that will be set on Heroku
